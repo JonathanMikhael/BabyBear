@@ -1,0 +1,76 @@
+{% extends 'layoutadmin.html'%}
+{% block content %}
+
+<section class="content-header">
+  {% for message in get_flashed_messages()%}
+  <div class="alert alert-info alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {{ message }}
+  </div>
+  {% endfor%}
+</section>
+
+
+<section class="about_section layout_padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2>
+              Email
+            </h2>
+          </div>
+
+          <form action="/email" method="POST" enctype="multipart/form-data"> 
+            <!-- TODO MAKE DROPDOWN -->
+            <div class="form-row">
+              <div class="form-group form-left col-md-6">
+                <label for="inputAddress">Email User</label>
+                {% for row in emailuser %}
+                  <input type="email" name="email" class="form-control" autocomplete="off" value="{{row[1]}}" required>
+                {% endfor %}
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputAddress">App Password</label>
+                <input type="password" name="apppassword" class="form-control" readonly value='hbpsnzadpoyholgx' required>
+              </div>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Email Destination</label>
+                <select name='emailkepada' class="form-control" required>
+                  <option value= "all" >All</option>
+                  {% for row in alluser %}
+                    <option value= "{{row[1]}}">{{row[1]}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Email Subject</label>
+              <input type="text" class="form-control" name='subject' placeholder="Email Subject" autocomplete="off" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Email Message</label>
+              <textarea name="emailmessage" class="form-control" placeholder="Message" rows="8" autocomplete="off"></textarea>
+            </div>
+            <br>
+            <button type="submit" value="Submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="imgform">
+          <img src="static/img/produk.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="./static/js/jquery-3.5.1.min.js"></script>
+
+<!-- end about section -->
+{% endblock %}

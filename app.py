@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, session, url
 import sys
 
 import secrets
+from flask_mail import Mail, Message
 
 import os
 
@@ -12,6 +13,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/upload/'
 ROWS_PER_PAGE = 5
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 app.secret_key = '@#$123456&*()'
 app.secret_key = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -54,10 +59,6 @@ def contact():
 @app.route('/aboutus')
 def skating():
         return render_template('aboutus.html', aboutactive=True)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000)
-    app.run(debug = True)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -149,3 +150,40 @@ def about():
     datacloth = db.readcloth(None)
 
     return render_template('products.html', prodactive = True, datapacifier=datapacifier, datarides=datarides, datacloth=datacloth)
+
+@app.route('/email', methods=['GET', 'POST'])
+def email():
+    alluser = db.readuser(None)
+    
+    emailuser = db.readuser(session['username'])
+    if request.method == 'POST':
+        email = request.form['email']
+        apppassword = request.form['apppassword']
+        to = request.form['emailkepada']
+        subject = request.form['subject']
+        emailmessage = request.form['emailmessage']
+        app.config['MAIL_USERNAME'] = email
+        app.config['MAIL_PASSWORD'] = apppassword
+        if to == 'all':
+            allemail=[]
+            for i in alluser:
+                allemail.append(i[1])
+            emailmessages = Message(subject, sender=email, recipients=allemail)
+            emailmessages.body = emailmessage
+        else:
+            emailmessages = Message(subject, sender=email, recipients=[to])
+            emailmessages.body = emailmessage
+        try:
+            mail = Mail(app)
+            mail.connect()
+            mail.send(emailmessages)
+            flash('Email Berhasil Dikirim ke '+ to)
+            return redirect('/email')
+        except:
+            flash('Email Gagal Dikirim ke '+ to)
+            return redirect('/email')
+    return render_template('email.html', emailactive = True, alluser=alluser, emailuser=emailuser)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=5000)
+    app.run(debug = True)

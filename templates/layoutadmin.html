@@ -40,7 +40,7 @@
 <body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
     <!-- Header -->
     <section id="nav-bar">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
                     <img src="static/img/logobb2.png" alt="logo">
@@ -78,6 +78,15 @@
                                     DATA PRODUCT
                                 </a>
                         </li>
+                        <li class="nav-item">
+                            {% if emailactive == True %}
+                            <a id="picked" class="nav-link active" href="email">
+                                {% else %}
+                                <a class="nav-link active" href="email">
+                                    {% endif %}
+                                    EMAIL
+                                </a>
+                        </li>
                         {% if session['username']%}
                         <li class="nav-item">
                             <a href="/admin" class="button-1" id="usernamebutton">
@@ -99,8 +108,6 @@
     </section>
     <!-- end header section -->
     {% block content %}
-
-
 
     {% endblock %}
 

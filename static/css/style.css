@@ -32,6 +32,43 @@
   touch-action: manipulation;
 }
 
+.button-1:hover{
+    color: #ffffff!important;
+  }
+
+.profile {
+    background-color: #EA4C89;
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF!important;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    pointer-events: none;
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-weight: bold;
+  }
+
 .button-1:hover,
 .button-1:focus {
   background-color: #F082AC;
@@ -51,9 +88,9 @@
 
 .navbar-nav li a{
     float: right;
-    color: #555555!important;
+    color: #555555;
     font-weight: 400;
-    
+    color:inherit;
 }
 
 .navbar-nav li a:hover{
@@ -519,6 +556,15 @@ blockquote::after{
 .form-control{
     border: 1px solid #B04AB7!important;
     border-radius: 20px;
+}
+
+.form-row{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-left{
+    padding-right: 10px;
 }
 
 .form-control input:focus {
