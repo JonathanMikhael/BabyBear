@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 30, 2023 at 08:14 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Host: localhost
+-- Generation Time: Jan 02, 2024 at 06:23 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.2.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `flask2023`
+-- Database: `babynbear`
 --
 
 -- --------------------------------------------------------
@@ -34,7 +35,7 @@ CREATE TABLE `products` (
   `nama_produk` varchar(255) NOT NULL,
   `deskripsi` text DEFAULT NULL,
   `harga_jual` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `products`
@@ -68,21 +69,22 @@ CREATE TABLE `user` (
   `namalengkap` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `username` varchar(25) NOT NULL,
-  `password` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `password` varchar(30) NOT NULL,
+  `userRole` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`namalengkap`, `email`, `username`, `password`) VALUES
-('Abdi', 'abdi123@gmail.com', 'a', 'A'),
-('Abdi', 'abdi@gmail.com', 'abdi', 'abdi123'),
-('B', 'b@gmail.com', 'b', 'b'),
-('Bhustomy Hakim', 'bhust@gmail.com', 'bhustomy', '12345'),
-('c', 'c@gmail.com', 'c', 'c'),
-('d', 'd@gmail.com', 'd', 'd'),
-('Sisilia Petrisa', 'silpetrisa@gmail.com', 'sisiliaptrsa', 'lunableue');
+INSERT INTO `user` (`namalengkap`, `email`, `username`, `password`, `userRole`) VALUES
+('Abdi', 'abdi123@gmail.com', 'a', 'A', 'user'),
+('Abdi', 'abdi@gmail.com', 'abdi', 'abdi123', 'user'),
+('B', 'jonathan.anthony886@gmail.com', 'b', 'b', 'admin'),
+('Bhustomy Hakim', 'asdasdasxasxasx@gmail.com', 'bhustomy', '12345', 'user'),
+('c', 'c@gmail.com', 'c', 'c', 'admin'),
+('d', 'd@gmail.com', 'd', 'd', 'admin'),
+('Sisilia Petrisa', 'silpetrisa@gmail.com', 'sisiliaptrsa', 'lunableue', 'user');
 
 --
 -- Indexes for dumped tables
