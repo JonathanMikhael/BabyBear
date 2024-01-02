@@ -1,0 +1,59 @@
+{% extends 'layoutadmin.html'%}
+{% block content %}
+<!-- about section -->
+
+<section class="about_section layout_padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2>
+              Insert Product
+            </h2>
+          </div>
+
+          <form action="/insert" method="POST" enctype="multipart/form-data"> 
+            <!-- TODO MAKE DROPDOWN -->
+            <div class="form-group">
+              <label for="inputAddress">Category</label>
+              <input type="text" name="kategori" class="form-control" autocomplete="off" placeholder="Category" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Image</label>
+              <input type="file" name="gambar" class="form-control" autocomplete="off" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Product Name</label>
+              <input type="text" class="form-control" name='nama_produk' placeholder="Product Name" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Description</label>
+              <input type="text" class="form-control" name='deskripsi' placeholder="Description" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Price</label>
+              <input type="number" class="form-control" name='harga_jual' placeholder="Price" required>
+            </div>
+            <br>
+            <button type="submit" value="Submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="imgform">
+          <img src="static/img/produk.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="./static/js/jquery-3.5.1.min.js"></script>
+
+<!-- end about section -->
+{% endblock %}

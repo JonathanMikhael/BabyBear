@@ -1,0 +1,175 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<section class="content-header">
+    {% for message in get_flashed_messages()%}
+    <div class="alert alert-info alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        {{ message }}
+    </div>
+    {% endfor%}
+</section>
+
+<!-- Products -->
+<section id="price">
+    <div class="container">
+        <h1>Pacifier</h1>
+        <div class="row">
+            {% if datapacifier|length == 0 %}
+            <b>No Entry Has Been Added</b> <br />
+            {% else %}
+            {% for row in datapacifier %}
+            <div class="text-center col-md-3">
+                <div class="single-price">
+                    <div class="pricebody">
+                        <div class="grid-item">
+                            <a data-fancybox="gallery" href="static/img/{{row[2]}}"><img src="static/img/{{row[2]}}" width="100%"></a>
+                        </div>
+                    </div>
+                    <div class="pricebutton">
+                        <a data-fancybox="gallery" href="static/img/{{row[2]}}">{{row[3]}}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <br><br>
+        <h1>Baby Rides</h1>
+        <div class="row">
+            {% if datarides|length == 0 %}
+            <b>No Entry Has Been Added</b> <br />
+            {% else %}
+            {% for row in datarides %}
+            <div class="text-center col-md-3">
+                <div class="single-price">
+                    <div class="pricebody">
+                        <div class="grid-item">
+                            <a data-fancybox="gallery" href="static/img/{{row[2]}}"><img src="static/img/{{row[2]}}" width="100%"></a>
+                        </div>
+                    </div>
+                    <div class="pricebutton">
+                        <a data-fancybox="gallery" href="static/img/{{row[2]}}">{{row[3]}}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <br><br>
+        <h1>Clothings</h1>
+        <div class="row">
+            {% if datacloth|length == 0 %}
+            <b>No Entry Has Been Added</b> <br />
+            {% else %}
+            {% for row in datacloth %}
+            <div class="text-center col-md-3">
+                <div class="single-price">
+                    <div class="pricebody">
+                        <a data-fancybox="gallery" href="static/img/{{row[2]}}"><img src="static/img/{{row[2]}}" width="100%"></a>
+                    </div>
+                    <div class="pricebutton">
+                        <a data-fancybox="gallery" href="static/img/{{row[2]}}">{{row[3]}}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section id="price">
+    <h2>Size Chart</h2>
+    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Sizes</th>
+                    <th>Height</th>
+                    <th>Weight</th>
+                    <th>Shoulder to Hem</th>
+                    <th>Shoulder to Crotch</th>
+                    <th>Chest</th>
+                    <th>Short Sleeve Length</th>
+                    <th>Long Sleeve Length</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>NB</td>
+                    <td>19</td>
+                    <td>7</td>
+                    <td>18.5</td>
+                    <td>13.5</td>
+                    <td>9.5</td>
+                    <td>3.5</td>
+                    <td>7.25</td>
+                </tr>
+                <tr>
+                    <td>3M</td>
+                    <td>24</td>
+                    <td>14</td>
+                    <td>20</td>
+                    <td>14.5</td>
+                    <td>9.75</td>
+                    <td>3.75</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>6M</td>
+                    <td>26</td>
+                    <td>18</td>
+                    <td>21</td>
+                    <td>15.25</td>
+                    <td>10.25</td>
+                    <td>3.75</td>
+                    <td>8.5</td>
+                </tr>
+                <tr>
+                    <td>9M</td>
+                    <td>28</td>
+                    <td>20</td>
+                    <td>22</td>
+                    <td>16</td>
+                    <td>10.75</td>
+                    <td>4</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <td>12M</td>
+                    <td>30</td>
+                    <td>21</td>
+                    <td>23.5</td>
+                    <td>17</td>
+                    <td>11.25</td>
+                    <td>4</td>
+                    <td>9.5</td>
+                </tr>
+                <tr>
+                    <td>18M</td>
+                    <td>32</td>
+                    <td>24</td>
+                    <td>25</td>
+                    <td>18</td>
+                    <td>11.75</td>
+                    <td>4.25</td>
+                    <td>10.25</td>
+                </tr>
+            <tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Plugin JS -->
+<script src="path/to/smooth-scroll.polyfills.min.js"></script>
+<script>
+    var scroll = new SmoothScroll('a[href*="#"]', {
+        speed: 300,
+        offset: 50
+    });
+</script>
+
+{% endblock %}
+
+<!-- FancyBox JS -->

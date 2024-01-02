@@ -1,0 +1,151 @@
+from flask import Flask, render_template, request, flash, redirect, session, url_for
+import sys
+
+import secrets
+
+import os
+
+from model import Database
+
+app = Flask(__name__)
+
+UPLOAD_FOLDER = 'static/upload/'
+ROWS_PER_PAGE = 5
+
+app.secret_key = '@#$123456&*()'
+app.secret_key = 'supersecretkey'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+db = Database()
+
+@app.route('/')
+def index():
+    return render_template('index.html', homeactive=True)
+
+@app.route('/register', methods =['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        if request.form['password'] == request.form['konfirmasi']:
+            if db.checkuser(request.form):
+                if db.tambahuser(request.form):
+                    flash('Data Berhasil Disimpan. Silahkan Anda Login.')
+                    return redirect('/login')
+                else:
+                    flash('Data Gagal Disimpan. Ulangi lagi')
+                    return redirect('/register')
+            else:
+                flash('Username yang dimasukkan sudah terdaftar, coba buat username lain')
+                return redirect('/register')
+        else:
+            flash('Password yang dimasukkan tidak match')
+            return redirect('/register')
+
+    return render_template('register.html', daftaractive=True)
+
+@app.route('/contact', methods = ['GET', 'POST'])
+def contact():
+        if request.method == "POST":
+            data = request.form
+
+            return render_template('contact.html', data=data)
+        return render_template('contact.html', conactive=True)
+
+@app.route('/aboutus')
+def skating():
+        return render_template('aboutus.html', aboutactive=True)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=5000)
+    app.run(debug = True)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if db.checklogin(request.form):
+            session['username'] = request.form['username']
+            session['role'] = db.checkRole(request.form)
+            return redirect('/admin')
+        else:
+            flash('Username dan Password salah')
+            return redirect('/login')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    session.pop('role', None)
+    return redirect('/')
+    
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/insert', methods=['GET', 'POST'])
+def insert_data():
+    if request.method == 'POST':
+        if db.insert(request.form):
+            flash('Image successfully added into the database')
+            return redirect('/admin')
+        else:
+            flash('Image Failed to be added into the database')
+            return redirect('/admin')
+    else:
+        return render_template('insert.html', manageactive = True)
+
+@app.route('/save')
+def save(file):
+    hash_photo = secrets.token_urlsafe(10)
+    _, file_extension = os.path.splitext(file.filename)
+    filename = hash_photo + file_extension
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'],filename)
+    file.save(file_path)
+    return filename
+
+@app.route('/edit/<int:id>')
+def edit(id):
+    session['id'] = id
+    return redirect('/halamanedit')
+    
+
+@app.route('/halamanedit', methods = ['GET', 'POST'])
+def halamanedit():
+    id = session['id']
+    data = db.read(id)
+    if request.method == 'POST':
+        if db.edit(id, request.form):
+            flash('Data Berhasil Diubah')
+            session.pop('id', None)
+            return redirect('/admin')
+        else:
+            flash('Data Gagal Diupdate')
+            return redirect('/admin')
+    return render_template('edit.html', data=data)
+
+@app.route('/hapus/<int:id>')
+def hapus(id):
+    if db.delete(id):
+        flash('Data Berhasil Dihapus')
+        return redirect('/admin')
+    else:
+        flash('Data Gagal Dihapus')
+        return redirect('/admin')
+
+@app.route('/admin')
+def dataproduk():
+    if session['role'] != "admin":
+        return render_template('index.html',)
+    else:
+        data = db.read(None)
+
+        return render_template('dataproduk.html', dpactive = True, data=data)
+
+@app.route('/products')
+def about():
+
+    datapacifier = db.readpacifier(None)
+    datarides = db.readrides(None)
+    datacloth = db.readcloth(None)
+
+    return render_template('products.html', prodactive = True, datapacifier=datapacifier, datarides=datarides, datacloth=datacloth)

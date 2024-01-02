@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <!-- SLIDER -->
+    <div class="slider">
+        <div id="headerSlider" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#headerSlider" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true"></button>
+                <button type="button" data-bs-target="#headerSlider" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+                <button type="button" data-bs-target="#headerSlider" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="static/img/carouu1.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="static/img/carou2.jpeg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="static/img/carouu3.jpeg" class="d-block w-100" alt="...">
+                </div>
+            </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#headerSlider" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#headerSlider" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+    </div>
+
+    <!-- Overview -->
+    <section id="overview">
+        <div class="container">    
+            <span class="responsive">
+                <img src="static/img/whitewords.png" class="img-fluid mx-auto h-auto" alt="">
+            </span>
+            <div class="para__block space-fw">
+                <br>
+                <p id="taco"><strong>Because We Care</strong></p>
+            </div>
+            <div class="para__block space-fw">
+                <p>
+                    Welcome to "Baby & Bear", where we believe in making parenthood an enchanting journey. 
+                    Our collection of baby essentials is meticulously designed to bring comfort, joy, and peace of mind to both parents and little ones. 
+                    From the coziest blankets to the most adorable clothing, we've put love and care into every detail. 
+                    Every moment with your baby is precious, and we're here to make it even more extraordinary. 
+                    Explore the world of Baby & Bear and experience the magic of quality, style, and safety combined. Your baby deserves the best, and we're here to provide just that.
+                </p>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

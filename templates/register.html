@@ -1,0 +1,72 @@
+{% extends 'layout.html'%}
+{% block content %}
+<!-- about section -->
+
+<!-- Message -->
+<section class="content-header">
+  {% for message in get_flashed_messages()%}
+  <div class="alert alert-info alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    {{ message }}
+  </div>
+  {% endfor%}
+</section>
+<!-- Message -->
+
+
+<section class="about_section layout_padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2>
+              Registrasi
+            </h2>
+          </div>
+
+          <form action="/register" method="POST">
+            <div class="form-group">
+              <label for="inputAddress">Full Name</label>
+              <input type="text" class="form-control" name='namalengkap' placeholder="Full Name"
+                required="'required">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Email</label>
+              <input type="email" class="form-control" name='email' placeholder="example@example.com" required="'required">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Username</label>
+              <input type="text" class="form-control" name='username' placeholder="Username" required="required">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Password</label>
+              <input type="password" class="form-control" name='password' required="required" placeholder="Password">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="inputAddress">Confirm Password</label>
+              <input type="password" class="form-control" name='konfirmasi' required="reqiured" placeholder="Confirm Password">
+            </div>
+            <br>
+            <button type="submit" class="button-1" style="margin-top: 12px;">Register</button>
+          </form>
+
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="imgform">
+          <img src="static/img/regist.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- end about section -->
+
+
+{% endblock %}
