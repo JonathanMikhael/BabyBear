@@ -10,7 +10,7 @@ from model import Database
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/upload/'
+UPLOAD_FOLDER = 'static/img'
 ROWS_PER_PAGE = 5
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -85,15 +85,22 @@ def allowed_file(filename):
 
 @app.route('/insert', methods=['GET', 'POST'])
 def insert_data():
-    if request.method == 'POST':
-        if db.insert(request.form):
-            flash('Image successfully added into the database')
-            return redirect('/admin')
-        else:
-            flash('Image Failed to be added into the database')
-            return redirect('/admin')
+    if session['role'] != "admin":
+        return render_template('index.html',)
     else:
-        return render_template('insert.html', manageactive = True)
+        if request.method == 'POST':
+            file = request.files['gambar']
+            filename = save(file)
+
+            if db.insert(request.form, filename):
+                flash('Image successfully added into the database')
+                save(request.files['gambar'])
+                return redirect('/admin')
+            else:
+                flash('Image Failed to be added into the database')
+                return redirect('/admin')
+        else:
+            return render_template('insert.html', manageactive = True)
 
 @app.route('/save')
 def save(file):
@@ -101,6 +108,9 @@ def save(file):
     _, file_extension = os.path.splitext(file.filename)
     filename = hash_photo + file_extension
     file_path = os.path.join(app.config['UPLOAD_FOLDER'],filename)
+
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
     file.save(file_path)
     return filename
 
@@ -142,6 +152,15 @@ def dataproduk():
 
         return render_template('dataproduk.html', dpactive = True, data=data)
 
+@app.route('/order')
+def dataorder():
+    if session['role'] != "admin":
+        return render_template('index.html',)
+    else:
+        data = db.readOrder(None)
+
+        return render_template('order.html', dpactive = True, data=data)
+
 @app.route('/products')
 def about():
 
@@ -153,36 +172,39 @@ def about():
 
 @app.route('/email', methods=['GET', 'POST'])
 def email():
-    alluser = db.readuser(None)
-    
-    emailuser = db.readuser(session['username'])
-    if request.method == 'POST':
-        email = request.form['email']
-        apppassword = request.form['apppassword']
-        to = request.form['emailkepada']
-        subject = request.form['subject']
-        emailmessage = request.form['emailmessage']
-        app.config['MAIL_USERNAME'] = email
-        app.config['MAIL_PASSWORD'] = apppassword
-        if to == 'all':
-            allemail=[]
-            for i in alluser:
-                allemail.append(i[1])
-            emailmessages = Message(subject, sender=email, recipients=allemail)
-            emailmessages.body = emailmessage
-        else:
-            emailmessages = Message(subject, sender=email, recipients=[to])
-            emailmessages.body = emailmessage
-        try:
-            mail = Mail(app)
-            mail.connect()
-            mail.send(emailmessages)
-            flash('Email Berhasil Dikirim ke '+ to)
-            return redirect('/email')
-        except:
-            flash('Email Gagal Dikirim ke '+ to)
-            return redirect('/email')
-    return render_template('email.html', emailactive = True, alluser=alluser, emailuser=emailuser)
+    if session['role'] != "admin":
+        return render_template('index.html',)
+    else:
+        alluser = db.readuser(None)
+        
+        emailuser = db.readuser(session['username'])
+        if request.method == 'POST':
+            email = request.form['email']
+            apppassword = request.form['apppassword']
+            to = request.form['emailkepada']
+            subject = request.form['subject']
+            emailmessage = request.form['emailmessage']
+            app.config['MAIL_USERNAME'] = email
+            app.config['MAIL_PASSWORD'] = apppassword
+            if to == 'all':
+                allemail=[]
+                for i in alluser:
+                    allemail.append(i[1])
+                emailmessages = Message(subject, sender=email, recipients=allemail)
+                emailmessages.body = emailmessage
+            else:
+                emailmessages = Message(subject, sender=email, recipients=[to])
+                emailmessages.body = emailmessage
+            try:
+                mail = Mail(app)
+                mail.connect()
+                mail.send(emailmessages)
+                flash('Email Berhasil Dikirim ke '+ to)
+                return redirect('/email')
+            except:
+                flash('Email Gagal Dikirim ke '+ to)
+                return redirect('/email')
+        return render_template('email.html', emailactive = True, alluser=alluser, emailuser=emailuser)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)

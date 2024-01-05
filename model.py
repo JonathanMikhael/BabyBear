@@ -21,6 +21,20 @@ class Database:
         finally:
             con.close()
 
+    def readOrder(self, id):
+        con = Database.connect(self)
+        cursor = con.cursor()
+        try:
+            if id == None:
+                cursor.execute('SELECT * FROM orders')
+            else:
+                cursor.execute('SELECT * FROM orders where id = %s' ,(id,))
+            return cursor.fetchall()
+        except:
+            return ()
+        finally:
+            con.close()
+
     def readpacifier(self, id):
         con = Database.connect(self)
         cursor = con.cursor()
@@ -63,18 +77,19 @@ class Database:
         finally:
             con.close()
 
-    def insert(self, data):
+    def insert(self, data, filename):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
             file = request.files['gambar']
             cursor.execute('INSERT INTO products(kategori, gambar, nama_produk, deskripsi, harga_jual) VALUES(%s, %s, %s, %s, %s)',
-                    (data['kategori'], file.filename, data['nama_produk'], data['deskripsi'], data['harga_jual'],))
+                    (data['kategori'], filename, data['nama_produk'], data['deskripsi'], data['harga_jual'],))
 
             con.commit()
             return True
-        except:
+        except Exception as e:
             con.rollback()
+            print(e)
             return False
         finally:
             con.close()
