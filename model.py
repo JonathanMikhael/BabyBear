@@ -7,70 +7,70 @@ class Database:
 
         return pymysql.connect(host='localhost', user='root', password='', database='babynbear', charset='utf8mb4')
     
-    def read(self, id):
+    def read(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            if id == None:
+            if idProduct == None:
                 cursor.execute('SELECT * FROM products')
             else:
-                cursor.execute('SELECT * FROM products where id = %s' ,(id,))
+                cursor.execute('SELECT * FROM products where idProduct = %s' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
         finally:
             con.close()
 
-    def readOrder(self, id):
+    def readOrder(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            if id == None:
+            if idProduct == None:
                 cursor.execute('SELECT * FROM orders')
             else:
-                cursor.execute('SELECT * FROM orders where id = %s' ,(id,))
+                cursor.execute('SELECT * FROM orders where idProduct = %s' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
         finally:
             con.close()
 
-    def readpacifier(self, id):
+    def readpacifier(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            if id == None:
+            if idProduct == None:
                 cursor.execute('SELECT * FROM products WHERE kategori="Pacifier"')
             else:
-                cursor.execute('SELECT * FROM products where id = %s AND kategori ="Pacifier"' ,(id,))
+                cursor.execute('SELECT * FROM products where idProduct = %s AND kategori ="Pacifier"' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
         finally:
             con.close()
 
-    def readrides(self, id):
+    def readrides(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            if id == None:
+            if idProduct == None:
                 cursor.execute('SELECT * FROM products WHERE kategori="BabyRides"')
             else:
-                cursor.execute('SELECT * FROM products where id = %s AND kategori ="BabyRides"' ,(id,))
+                cursor.execute('SELECT * FROM products where idProduct = %s AND kategori ="BabyRides"' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
         finally:
             con.close()
 
-    def readcloth(self, id):
+    def readcloth(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            if id == None:
+            if idProduct == None:
                 cursor.execute('SELECT * FROM products WHERE kategori="Clothings"')
             else:
-                cursor.execute('SELECT * FROM products where id = %s AND kategori ="Clothings"' ,(id,))
+                cursor.execute('SELECT * FROM products where idProduct = %s AND kategori ="Clothings"' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
@@ -81,7 +81,6 @@ class Database:
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            file = request.files['gambar']
             cursor.execute('INSERT INTO products(kategori, gambar, nama_produk, deskripsi, harga_jual) VALUES(%s, %s, %s, %s, %s)',
                     (data['kategori'], filename, data['nama_produk'], data['deskripsi'], data['harga_jual'],))
 
@@ -94,11 +93,11 @@ class Database:
         finally:
             con.close()
     
-    def delete(self, id):
+    def delete(self, idProduct):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            cursor.execute('DELETE FROM products where id = %s', (id,))
+            cursor.execute('DELETE FROM products where idProduct = %s', (idProduct,))
             con.commit()
             return True
         except:
@@ -107,13 +106,13 @@ class Database:
         finally:
             con.close()
 
-    def edit(self, id, data):
+    def edit(self, idProduct, data):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
             file = request.files['gambar']
-            cursor.execute('UPDATE products SET kategori = %s, gambar = %s, nama_produk = %s, deskripsi = %s, harga_jual = %s where id = %s',
-                                    (data['kategori'], file.filename, data['nama_produk'], data['deskripsi'], data['harga_jual'],id,))
+            cursor.execute('UPDATE products SET kategori = %s, gambar = %s, nama_produk = %s, deskripsi = %s, harga_jual = %s where idProduct = %s',
+                                    (data['kategori'], file.filename, data['nama_produk'], data['deskripsi'], data['harga_jual'],idProduct,))
             con.commit()
             return True
         except:

@@ -114,29 +114,29 @@ def save(file):
     file.save(file_path)
     return filename
 
-@app.route('/edit/<int:id>')
-def edit(id):
-    session['id'] = id
+@app.route('/edit/<int:idProduct>')
+def edit(idProduct):
+    session['idProduct'] = idProduct
     return redirect('/halamanedit')
     
 
 @app.route('/halamanedit', methods = ['GET', 'POST'])
 def halamanedit():
-    id = session['id']
-    data = db.read(id)
+    idProduct = session['idProduct']
+    data = db.read(idProduct)
     if request.method == 'POST':
-        if db.edit(id, request.form):
+        if db.edit(idProduct, request.form):
             flash('Data Berhasil Diubah')
-            session.pop('id', None)
+            session.pop('idProduct', None)
             return redirect('/admin')
         else:
             flash('Data Gagal Diupdate')
             return redirect('/admin')
     return render_template('edit.html', data=data)
 
-@app.route('/hapus/<int:id>')
-def hapus(id):
-    if db.delete(id):
+@app.route('/hapus/<int:idProduct>')
+def hapus(idProduct):
+    if db.delete(idProduct):
         flash('Data Berhasil Dihapus')
         return redirect('/admin')
     else:

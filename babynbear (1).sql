@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 02, 2024 at 06:23 PM
+-- Generation Time: Jan 05, 2024 at 05:14 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.28
 
@@ -25,11 +25,36 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orderData`
+--
+
+CREATE TABLE `orderData` (
+  `idOrder` int(11) NOT NULL,
+  `username` varchar(25) NOT NULL,
+  `idProduct` int(11) NOT NULL,
+  `qtyProduct` int(11) NOT NULL,
+  `totalHarga` int(10) NOT NULL,
+  `statusDelivery` enum('On Progress','Delivered') NOT NULL,
+  `CREATED_AT` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `orderData`
+--
+
+INSERT INTO `orderData` (`idOrder`, `username`, `idProduct`, `qtyProduct`, `totalHarga`, `statusDelivery`, `CREATED_AT`) VALUES
+(1, 'b', 10, 1, 35000, 'On Progress', '2024-01-05'),
+(2, 'b', 11, 1, 32000, 'On Progress', '2024-01-05'),
+(3, 'c', 6, 2, 30000, 'On Progress', '2024-01-08');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
 CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
+  `idProduct` int(11) NOT NULL,
   `kategori` varchar(25) NOT NULL,
   `gambar` varchar(255) DEFAULT NULL,
   `nama_produk` varchar(255) NOT NULL,
@@ -41,7 +66,7 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `kategori`, `gambar`, `nama_produk`, `deskripsi`, `harga_jual`) VALUES
+INSERT INTO `products` (`idProduct`, `kategori`, `gambar`, `nama_produk`, `deskripsi`, `harga_jual`) VALUES
 (6, 'Pacifier', 'paci1.png', 'Night Glow Baby Blue Pacifier', 'Pacifier', 15000),
 (7, 'Pacifier', 'paci2.png', 'Blush Pacifier', 'Pacifier', 17000),
 (8, 'Pacifier', 'paci3.png', 'White Pacifier', 'Pacifier', 20000),
@@ -91,10 +116,16 @@ INSERT INTO `user` (`namalengkap`, `email`, `username`, `password`, `userRole`) 
 --
 
 --
+-- Indexes for table `orderData`
+--
+ALTER TABLE `orderData`
+  ADD PRIMARY KEY (`idOrder`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`idProduct`);
 
 --
 -- Indexes for table `user`
@@ -107,10 +138,16 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `orderData`
+--
+ALTER TABLE `orderData`
+  MODIFY `idOrder` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idProduct` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

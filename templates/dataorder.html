@@ -1,0 +1,69 @@
+{% extends 'layoutadmin.html'%}
+{% block content %}
+<!-- about section -->
+<!-- Message -->
+<section class="content-header">
+  {% for message in get_flashed_messages()%}
+  <div class="alert alert-info alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    {{ message }}
+  </div>
+  {% endfor%}
+</section>
+<!-- Message -->
+
+<section class="about_section layout_padding">
+  <div class="container">
+    <h2>
+      Data Product
+    </h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="table-primary">
+            <th class="text-center">NO</th>
+            <th class="text-center">KATEGORI</th>
+            <th class="text-center">GAMBAR</th>
+            <th class="text-center">NAMA PRODUK</th>
+            <th class="text-center">DESKRIPSI</th>
+            <th class="text-center">HARGA</th>
+            <th class="text-center">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if data|length == 0 %}
+          <b>No Entry Has Been Added</b> <br />
+          {% else %}
+          {% for row in data %}
+          <tr>
+            <td scope="row">{{ loop.index }}</th>
+            <td class="text-center" style="color:black;">{{row[1]}}</td>
+            <td class="text-center" style="color:black;"><img src="static/img/{{row[2]}}" alt="" width="150px"
+                height="150px"></td>
+            <td class="text-center" style="color:black;">{{row[3]}}</td>
+            <td class="text-center" style="color:black;">{{row[4]}}</td>
+            <td class="text-center" style="color:black;">{{row[5]}}</td>
+            <td class="text-center" style="color:black;">
+              <a href='/edit/{{row[0]}}'><b>Edit </b></a> |
+              <a href='/hapus/{{row[0]}}'><b>Hapus</b></a>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+      <nav aria-label="...">
+        <ul class="pagination pagination-sm justify-content-end">
+          <li class="page-item active" aria-current="page">
+            <span class="page-link">1</span>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- end about section -->
+{% endblock %}
