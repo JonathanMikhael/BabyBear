@@ -12,18 +12,18 @@
         <button type="submit" style="display: flex; flex-wrap: wrap; flex-direction: row-reverse;" class="button-1">Filter Data</button>
         <div class="me-3 form-group categoryselected" style="display: none">
             <select name="filterCategory" class="form-control" style="width: 100%;" >
-              <option disabled="disabled" selected="true" value="">--- Select Category ---</option>
+              <option disabled="disabled" selected="true">--- Select Category ---</option>
               <option value="Pacifier">Pacifiers</option>
               <option value="BabyRides">Baby Rides</option>
               <option value="Clothings">Clothings</option>
             </select>
         </div>
         <div class="me-3 form-group dateselected" style="display: none; align-items: baseline;">
-          <input class="date me-2 form-control" name="dateAwal" type="date" placeholder="yyyy-mm-dd">
+          <input class="date1 form-control me-2" name="dateAwal" type="date">
           &mdash;
-          <input class="date ms-2 form-control" name="dateAkhir" type="date" placeholder="yyyy-mm-dd">
+          <input class="date2 form-control ms-2" name="dateAkhir" type="date">
         </div>
-        <select name="filter" class="me-4 form-control filterselect" style="width: 12%!important;" onchange="filterSelected()" required>
+        <select name="filter" class="me-4 form-control filterselect" style="width: 12%!important;" onchange="filterSelected()">
           <option disabled="disabled" selected="true">--- Select Filter ---</option>
           <option value="Category">Category</option>
           <option value="Date">Date</option>
@@ -69,17 +69,19 @@
           {% endif %}
         </tbody>
       </table>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
   </div>
 </section>
+
+<script src="../static/js/jquery-3.5.1.min.js"></script>
 
 <script>
   function filterSelected() {
     var selectedFilter = document.querySelector('.filterselect').value;
     var categoryFilterDiv = document.querySelector('.categoryselected');
     var dateFilterDiv = document.querySelector('.dateselected');
-
+    
     if(selectedFilter === "Category") {
       categoryFilterDiv.style.display = 'flex'; // Use 'flex' if it's a flex container
       dateFilterDiv.style.display = 'none';
@@ -88,10 +90,6 @@
       dateFilterDiv.style.display = 'flex';
     }
   }
-
-  $(".date").datepicker({
-        format: "yyyy-mm-dd",
-      });
 </script>
 
 

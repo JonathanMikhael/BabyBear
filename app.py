@@ -89,10 +89,10 @@ def allowed_file(filename):
 
 @app.route('/insert', methods=['GET', 'POST'])
 def insert_data():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
-        if session['role'] != "admin":
+        if 'role' not in session or session['role'] != "admin":
             return redirect('/')
         else:
             if request.method == 'POST':
@@ -121,7 +121,7 @@ def save(file):
 
 @app.route('/edit/<int:idProduct>')
 def edit(idProduct):
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         session['idProduct'] = idProduct
@@ -129,7 +129,7 @@ def edit(idProduct):
 
 @app.route('/halamanedit', methods = ['GET', 'POST'])
 def halamanedit():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         idProduct = session['idProduct']
@@ -166,7 +166,7 @@ def productpage():
 
 @app.route('/hapus/<int:idProduct>')
 def hapus(idProduct):
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         if db.delete(idProduct):
@@ -176,7 +176,7 @@ def hapus(idProduct):
 
 @app.route('/admin')
 def dataproduk():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         data = db.read(None)
@@ -185,24 +185,24 @@ def dataproduk():
 
 @app.route('/order', methods=['GET', 'POST'])
 def dataorder():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         data = db.readOrder(None)
 
         if request.method == 'POST':
             filterType = request.form['filter']
-            categoryType = request.form['filterCategory']
             dateAwal = request.form['dateAwal']
             dateAkhir = request.form['dateAkhir']
 
             if filterType == 'Category':
+                categoryType = request.form['filterCategory']
                 data = db.readCategory(categoryType)
                 return render_template('order.html', orderactive = True, data=data)
-                
-            if filterType == 'Date':
-                data = db.readDate(dateAwal, dateAkhir)
+            elif filterType == 'Date':
+                data = db.readDate(dateAwal,dateAkhir)
                 return render_template('order.html', orderactive = True, data=data)
+                
 
     return render_template('order.html', orderactive = True, data=data)
 
@@ -217,7 +217,7 @@ def about():
 
 @app.route('/email', methods=['GET', 'POST'])
 def email():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         alluser = db.readuser(None)
@@ -251,7 +251,7 @@ def email():
 
 @app.route('/update_delivery/<int:idOrder>', methods=['GET','POST'])
 def updateStatus(idOrder):
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         session['idOrder'] = idOrder
@@ -259,7 +259,7 @@ def updateStatus(idOrder):
 
 @app.route('/update_delivery_status', methods=['GET', 'POST'])
 def update_delivery_status():
-    if session['role'] != "admin":
+    if 'role' not in session or session['role'] != "admin":
         return redirect('/')
     else:
         idOrder = session['idOrder']
@@ -278,24 +278,6 @@ def myorder():
         return render_template('myorder.html', orderactive = True, datamyorder=datamyorder)
     else:
         return render_template('login.html',)
-
-@app.route('/filter', methods=['GET', 'POST'])
-def filterOrder():
-    if session['role'] != "admin":
-        return redirect('/')
-    else:
-        filterType = request.form['filter']
-        categoryType = request.form['filterCategory']
-        dateAwal = request.form['dateAwal']
-        dateAkhir = request.form['dateAkhir']
-
-        if request.method == 'POST':
-            if filterType == 'Category':
-                data = db.readCategory(categoryType)
-                return render_template('order.html', orderactive = True, data=data)
-            else:
-                data = db.readDate(dateAwal, dateAkhir)
-                return render_template('order.html', orderactive = True, data=data)
 
 
 

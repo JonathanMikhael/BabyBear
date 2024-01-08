@@ -255,15 +255,15 @@ class Database:
         finally:
             con.close()
 
-    def readDate(self, dateAwal, dateAkhir):
+    def readDate(self,dateAwal,dateAkhir):
         con = Database.connect(self)
         cursor = con.cursor()
         try:
-            cursor.execute('SELECT * FROM orderdata WHERE CREATED_AT BETWEEN %s AND %s', (dateAwal, dateAkhir,))
+            query = 'SELECT * FROM orderdata WHERE CREATED_AT BETWEEN %s AND %s'
+            cursor.execute(query, (dateAwal, dateAkhir))
             return cursor.fetchall()
         except Exception as e:
             print("Error: ", e)
-            con.rollback()
-            return False
+            return []
         finally:
             con.close()
