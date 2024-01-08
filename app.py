@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for
 import sys
 
 import secrets
@@ -7,6 +7,14 @@ from flask_mail import Mail, Message
 import os
 
 from model import Database
+
+def currency_format(value):
+    try:
+        value = int(value)
+    except ValueError:
+        return value
+    return "{:,.0f}".format(value)
+
 
 app = Flask(__name__)
 
@@ -21,6 +29,7 @@ app.secret_key = '@#$123456&*()'
 app.secret_key = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.jinja_env.filters['currency_format'] = currency_format
 
 db = Database()
 
@@ -34,16 +43,12 @@ def register():
         if request.form['password'] == request.form['konfirmasi']:
             if db.checkuser(request.form):
                 if db.tambahuser(request.form):
-                    flash('Data Berhasil Disimpan. Silahkan Anda Login.')
                     return redirect('/login')
                 else:
-                    flash('Data Gagal Disimpan. Ulangi lagi')
                     return redirect('/register')
             else:
-                flash('Username yang dimasukkan sudah terdaftar, coba buat username lain')
                 return redirect('/register')
         else:
-            flash('Password yang dimasukkan tidak match')
             return redirect('/register')
 
     return render_template('register.html', daftaractive=True)
@@ -57,7 +62,7 @@ def contact():
         return render_template('contact.html', conactive=True)
 
 @app.route('/aboutus')
-def skating():
+def aboutus():
         return render_template('aboutus.html', aboutactive=True)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,7 +73,6 @@ def login():
             session['role'] = db.checkRole(request.form)
             return redirect('/admin')
         else:
-            flash('Username dan Password salah')
             return redirect('/login')
     return render_template('login.html')
 
@@ -86,21 +90,22 @@ def allowed_file(filename):
 @app.route('/insert', methods=['GET', 'POST'])
 def insert_data():
     if session['role'] != "admin":
-        return render_template('index.html',)
+        return redirect('/')
     else:
-        if request.method == 'POST':
-            file = request.files['gambar']
-            filename = save(file)
-
-            if db.insert(request.form, filename):
-                flash('Image successfully added into the database')
-                save(request.files['gambar'])
-                return redirect('/admin')
-            else:
-                flash('Image Failed to be added into the database')
-                return redirect('/admin')
+        if session['role'] != "admin":
+            return redirect('/')
         else:
-            return render_template('insert.html', manageactive = True)
+            if request.method == 'POST':
+                file = request.files['gambar']
+                filename = save(file)
+
+                if db.insert(request.form, filename):
+                    save(request.files['gambar'])
+                    return redirect('/admin')
+                else:
+                    return redirect('/admin')
+            else:
+                return render_template('insert.html', manageactive = True)
 
 @app.route('/save')
 def save(file):
@@ -116,37 +121,66 @@ def save(file):
 
 @app.route('/edit/<int:idProduct>')
 def edit(idProduct):
-    session['idProduct'] = idProduct
-    return redirect('/halamanedit')
-    
+    if session['role'] != "admin":
+        return redirect('/')
+    else:
+        session['idProduct'] = idProduct
+        return redirect('/halamanedit')
 
 @app.route('/halamanedit', methods = ['GET', 'POST'])
 def halamanedit():
-    idProduct = session['idProduct']
-    data = db.read(idProduct)
-    if request.method == 'POST':
-        if db.edit(idProduct, request.form):
-            flash('Data Berhasil Diubah')
-            session.pop('idProduct', None)
-            return redirect('/admin')
-        else:
-            flash('Data Gagal Diupdate')
-            return redirect('/admin')
-    return render_template('edit.html', data=data)
+    if session['role'] != "admin":
+        return redirect('/')
+    else:
+        idProduct = session['idProduct']
+        data = db.read(idProduct)
+        if request.method == 'POST':
+            if db.edit(idProduct, request.form):
+                session.pop('idProduct', None)
+                return redirect('/admin')
+            else:
+                return redirect('/admin')
+        return render_template('edit.html', data=data)
+
+
+
+@app.route('/product/<int:idProduct>')
+def product(idProduct):
+    if session['role'] != "user":
+        return redirect('/')
+    else:
+        session['idProduct'] = idProduct
+        return redirect('/productpage')
+
+@app.route('/productpage', methods = ['GET', 'POST'])
+def productpage():
+    if session['role'] != "user":
+        return redirect('/login')
+    else:
+        idProduct = session['idProduct']
+        data = db.read(idProduct)
+        if request.method == 'POST':
+            if db.buy(idProduct, request.form):
+                session.pop('idProduct', None)
+                return redirect('/')
+            else:
+                return redirect('/')
+        return render_template('halamanproduk.html', data=data)
 
 @app.route('/hapus/<int:idProduct>')
 def hapus(idProduct):
-    if db.delete(idProduct):
-        flash('Data Berhasil Dihapus')
-        return redirect('/admin')
+    if session['role'] != "admin":
+        return redirect('/')
     else:
-        flash('Data Gagal Dihapus')
-        return redirect('/admin')
+        if db.delete(idProduct):
+            return redirect('/admin')
+        else:
+            return redirect('/admin')
 
 @app.route('/admin')
 def dataproduk():
     if session['role'] != "admin":
-        return render_template('index.html',)
+        return redirect('/')
     else:
         data = db.read(None)
 
@@ -155,7 +189,7 @@ def dataproduk():
 @app.route('/order')
 def dataorder():
     if session['role'] != "admin":
-        return render_template('index.html',)
+        return redirect('/')
     else:
         data = db.readOrder(None)
 
@@ -173,7 +207,7 @@ def about():
 @app.route('/email', methods=['GET', 'POST'])
 def email():
     if session['role'] != "admin":
-        return render_template('index.html',)
+        return redirect('/')
     else:
         alluser = db.readuser(None)
         
@@ -199,12 +233,30 @@ def email():
                 mail = Mail(app)
                 mail.connect()
                 mail.send(emailmessages)
-                flash('Email Berhasil Dikirim ke '+ to)
                 return redirect('/email')
             except:
-                flash('Email Gagal Dikirim ke '+ to)
                 return redirect('/email')
         return render_template('email.html', emailactive = True, alluser=alluser, emailuser=emailuser)
+
+@app.route('/update_delivery/<int:idOrder>', methods=['GET','POST'])
+def updateStatus(idOrder):
+    if session['role'] != "admin":
+        return redirect('/')
+    else:
+        session['idOrder'] = idOrder
+        return redirect('/update_delivery_status')
+
+@app.route('/update_delivery_status', methods=['GET', 'POST'])
+def update_delivery_status():
+    if session['role'] != "admin":
+        return redirect('/')
+    else:
+        idOrder = session['idOrder']
+        if db.updateDeliveryStatus(idOrder):
+            session.pop('idOrder', None)
+            return redirect('/order')
+        else:
+            return redirect('/order')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)

@@ -1,32 +1,23 @@
 {% extends 'layoutadmin.html'%}
 {% block content %}
 <!-- about section -->
-<!-- Message -->
-<section class="content-header">
-  {% for message in get_flashed_messages()%}
-  <div class="alert alert-info alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    {{ message }}
-  </div>
-  {% endfor%}
-</section>
-<!-- Message -->
 
 <section class="about_section layout_padding">
   <div class="container">
     <h2>
-      Data Product
+      Data Order
     </h2>
     <div class="table-responsive">
       <table class="table table-bordered">
         <thead>
           <tr class="table-primary">
-            <th class="text-center">NO</th>
-            <th class="text-center">KATEGORI</th>
-            <th class="text-center">GAMBAR</th>
-            <th class="text-center">NAMA PRODUK</th>
-            <th class="text-center">DESKRIPSI</th>
-            <th class="text-center">HARGA</th>
+            <th class="text-center">ORDER ID</th>
+            <th class="text-center">USERNAME</th>
+            <th class="text-center">PRODUCT ID</th>
+            <th class="text-center">QUANTITY</th>
+            <th class="text-center">TOTAL</th>
+            <th class="text-center">DELIVERY STATUS</th>
+            <th class="text-center">ORDER DATE</th>
             <th class="text-center">ACTION</th>
           </tr>
         </thead>
@@ -36,17 +27,18 @@
           {% else %}
           {% for row in data %}
           <tr>
-            <td scope="row">{{ loop.index }}</th>
+            <td scope="row">{{ loop.index }}</td>
             <td class="text-center" style="color:black;">{{row[1]}}</td>
-            <td class="text-center" style="color:black;"><img src="static/img/{{row[2]}}" alt="" width="150px"
-                height="150px"></td>
+            <td class="text-center" style="color:black;">{{row[2]}}</td>
             <td class="text-center" style="color:black;">{{row[3]}}</td>
             <td class="text-center" style="color:black;">{{row[4]}}</td>
             <td class="text-center" style="color:black;">{{row[5]}}</td>
+            <td class="text-center" style="color:black;">{{row[6]}}</td>
             <td class="text-center" style="color:black;">
-              <a href='/edit/{{row[0]}}'><b>Edit </b></a> |
-              <a href='/hapus/{{row[0]}}'><b>Hapus</b></a>
-            </td>
+              <form method="POST" action="/update_delivery/{{row[0]}}">
+                  <button type="submit" class="btn btn-success btn-sm">Mark as Delivered</button>
+              </form>
+          </td>
           </tr>
           {% endfor %}
           {% endif %}

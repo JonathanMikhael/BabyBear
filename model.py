@@ -1,4 +1,5 @@
-from flask import request
+from flask import request, session
+from datetime import date
 import pymysql
 from werkzeug.utils import secure_filename
 
@@ -26,9 +27,9 @@ class Database:
         cursor = con.cursor()
         try:
             if idProduct == None:
-                cursor.execute('SELECT * FROM orders')
+                cursor.execute('SELECT * FROM orderData')
             else:
-                cursor.execute('SELECT * FROM orders where idProduct = %s' ,(idProduct,))
+                cursor.execute('SELECT * FROM orderData where idProduct = %s' ,(idProduct,))
             return cursor.fetchall()
         except:
             return ()
@@ -120,6 +121,28 @@ class Database:
             return False
         finally:
             con.close()
+
+    def buy(self, idProduct, data):
+        con = Database.connect(self)
+        cursor = con.cursor()
+
+        try:
+            cursor.execute('SELECT harga_jual FROM products WHERE idProduct = %s', (idProduct,))
+            harga = cursor.fetchone()
+            username= session['username']
+            if harga:
+                qtyProduct = int(data.get('qtyproduk', 1))
+                total = harga[0] * qtyProduct
+                cursor.execute('INSERT INTO orderData(username, idProduct, qtyProduct, totalHarga, statusDelivery, CREATED_AT) VALUES(%s, %s, %s, %s, %s, %s)',
+                            (username, idProduct, qtyProduct, total, 'On Progress', date.today()))
+                con.commit()
+                return True
+        except Exception as e:
+            print("Error: ", e)
+            con.rollback()
+            return False
+        finally:
+            con.close()
     
     def checkuser(self, data):
         con = Database.connect(self)
@@ -130,7 +153,9 @@ class Database:
                 return True
             else:
                 return False
-        except:
+        except Exception as e:
+            print("Error: ", e)
+            con.rollback()
             return False
         finally:
             con.close()
@@ -190,3 +215,15 @@ class Database:
         finally:
             con.close()
 
+    def updateDeliveryStatus(self, idOrder):
+        con = Database.connect(self)
+        cursor = con.cursor()
+        try:
+            cursor.execute('UPDATE orderdata SET statusDelivery = %s WHERE idOrder = %s', ('Delivered', idOrder))
+            con.commit()
+            return True
+        except:
+            con.rollback()
+            return False
+        finally:
+            con.close()

@@ -16,8 +16,12 @@
           <form action="/halamanedit" method="POST" enctype="multipart/form-data">
             <div class="form-group">
               <label for="inputAddress">Category</label>
-              <input type="text" name="kategori" class="form-control" autocomplete="off" value="{{ row[1] }}" required>
-            </div>
+              <select name="kategori" class="form-control" required>
+                <option disabled="disabled" selected="true">--- Select Category ---</option>
+                <option value="Pacifier" {% if row[1] == 'Pacifier' %} selected {% endif %}>Pacifiers</option>
+                <option value="BabyRides" {% if row[1] == 'BabyRides' %} selected {% endif %}>Baby Rides</option>
+                <option value="Clothings" {% if row[1] == 'Clothings' %} selected {% endif %}>Clothings</option>
+              </select>  
             <br>
             <div class="form-group">
               <label for="inputAddress">Image</label>

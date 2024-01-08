@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 05, 2024 at 05:14 PM
+-- Generation Time: Jan 08, 2024 at 06:50 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.28
 
@@ -34,7 +34,7 @@ CREATE TABLE `orderData` (
   `idProduct` int(11) NOT NULL,
   `qtyProduct` int(11) NOT NULL,
   `totalHarga` int(10) NOT NULL,
-  `statusDelivery` enum('On Progress','Delivered') NOT NULL,
+  `statusDelivery` varchar(50) NOT NULL,
   `CREATED_AT` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -43,9 +43,14 @@ CREATE TABLE `orderData` (
 --
 
 INSERT INTO `orderData` (`idOrder`, `username`, `idProduct`, `qtyProduct`, `totalHarga`, `statusDelivery`, `CREATED_AT`) VALUES
-(1, 'b', 10, 1, 35000, 'On Progress', '2024-01-05'),
-(2, 'b', 11, 1, 32000, 'On Progress', '2024-01-05'),
-(3, 'c', 6, 2, 30000, 'On Progress', '2024-01-08');
+(1, 'b', 10, 1, 35000, 'Delivered', '2024-01-05'),
+(2, 'b', 11, 1, 32000, 'Delivered', '2024-01-05'),
+(3, 'c', 6, 2, 30000, 'Delivered', '2024-01-08'),
+(4, 'abdi', 6, 1, 15000, 'Delivered', '2024-01-08'),
+(5, 'abdi', 7, 1, 17000, 'Delivered', '2024-01-08'),
+(6, 'abdi', 6, 1, 15000, 'Delivered', '2024-01-08'),
+(7, 'abdi', 7, 1, 17000, 'Delivered', '2024-01-08'),
+(8, 'abdi', 9, 3, 51000, 'Delivered', '2024-01-08');
 
 -- --------------------------------------------------------
 
@@ -141,7 +146,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `orderData`
 --
 ALTER TABLE `orderData`
-  MODIFY `idOrder` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idOrder` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`

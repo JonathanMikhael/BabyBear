@@ -1,0 +1,119 @@
+{% extends 'layoutadmin.html'%}
+{% block content %}
+<!-- about section -->
+
+<section class="about_section layout_padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="detail-box">
+          <div class="heading_container">
+            <h2 style="padding-top: 133px;" class="fw-bold display-4">
+              Buy Product
+            </h2>
+          </div>
+          {% for row in data %}
+          <form action="/productpage" method="POST" enctype="multipart/form-data">
+            <div class="form-row">
+              <div class="wrapper-content">
+                <div class="wrapper-inform">
+                  <h3 class="fw-bold heading-sm display-6" style="margin-bottom: 0.1rem!important;">{{ row[3] }}</h3>
+                  <p class="fs-4 fw-normal" style="font-size: 1.4rem!important;">
+                     {{ row[4] }}
+                  </p>
+                </div>
+                <div class="wrapper-detail">
+                  <div class="me-4 price">
+                    <span class="fs-5 fw-bold">Price:</span>
+                    <h3 class="mb-0 text-xl fw-bold">Rp {{ row[5]|currency_format }}</h3>
+                  </div>
+                  <div class="w-auto input-group justify-content-end align-items-end">
+                    <span class="fs-5 fw-bold" style="justify-content: end; margin-right: 53px;">Quantity:</span>
+                    <div style="flex-direction: row; justify-content: end; display: flex;">
+                      <input type="button" value="-" class="mx-1 border button-minus rounded-circle icon-shape icon-sm " data-field="qtyproduk">
+                      <input type="number" name="qtyproduk" class="w-10 text-center border-2 border-rounded quantity-field" readonly>
+                      <input type="button" value="+" class="mx-1 border button-plus rounded-circle icon-shape icon-sm" data-field="qtyproduk">
+                    </div>
+                  </div>
+                  <div class="ms-5 price">
+                    <span class="fs-5 fw-bold">Total:</span>
+                    <h3 class="mb-0 text-xl total fw-bold">&nbsp;</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- HTML !-->
+            <button class="button-28" type="submit" value="Submit" role="button">Purchase</button>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        {% for row in data %}
+          <div class="imgform">
+            <img src="static/img/{{row[2]}}" alt="imgproduct">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="../static/js/jquery-3.5.1.min.js"></script>
+
+
+{% for row in data %}
+  <script type="text/javascript">
+    var databaru = {{ row[5] }};
+    
+    $(document).ready(function() {
+      // Function to calculate total
+      function TotalCalculate(){
+        var qtyInput = document.querySelector('.quantity-field');
+        var qty = parseInt(qtyInput.value, 10);
+        var price = parseInt(databaru, 10);
+        var total = price * qty;
+        var totalElement = document.querySelector('.total');
+        totalElement.textContent = "Rp " + total.toLocaleString('id-ID').replace(/\./g, ',');
+      }
+      
+      // Function to increment value
+      function incrementValue(e) {
+        e.preventDefault();
+        var fieldName = $(e.target).data('field');
+        var parent = $(e.target).closest('.input-group');
+        var input = parent.find('input[name="' + fieldName + '"]');
+        var currentVal = parseInt(input.val(), 10);
+
+        if (isNaN(currentVal)) {
+          input.val(1);
+        } else {
+          input.val(currentVal + 1);
+        }
+        TotalCalculate(); // Call this function to update the total whenever the value changes
+      }
+
+      // Function to decrement value
+      function decrementValue(e) {
+        e.preventDefault();
+        var fieldName = $(e.target).data('field');
+        var parent = $(e.target).closest('.input-group');
+        var input = parent.find('input[name="' + fieldName + '"]');
+        var currentVal = parseInt(input.val(), 10);
+
+        if (!isNaN(currentVal) && currentVal > 1) {
+          input.val(currentVal - 1);
+        } else {
+          input.val(1); // The minimum value is 1
+        }
+        TotalCalculate(); // Call this function to update the total whenever the value changes
+      }
+
+      // Event listeners for plus and minus buttons
+      $('.input-group').on('click', '.button-plus', incrementValue);
+      $('.input-group').on('click', '.button-minus', decrementValue);
+    });
+  </script>
+{% endfor %}
+
+{% endblock %}
