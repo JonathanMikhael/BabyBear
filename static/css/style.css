@@ -1402,3 +1402,35 @@ h2 {
   box-shadow: none;
   transform: translateY(0);
 }
+
+/* My Order */
+.table-margin {
+    margin: 25px 500px 500px;
+    background-color: #EFEFEF;
+}
+
+.table-order {
+    font-size: 20px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: #EFEFEF;
+}
+
+.table-order td,
+.table-order th {
+    text-align: center;
+    padding: 15px;
+}
+
+.table-order td {
+    font-size: 22px;
+}
+
+.table-order thead th {
+    color: #EFEFEF;
+    background: #9c74cc;
+}

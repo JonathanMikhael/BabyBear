@@ -1,4 +1,4 @@
-{% extends 'layoutadmin.html'%}
+{% extends 'layout.html'%}
 {% block content %}
 <!-- about section -->
 
@@ -31,7 +31,7 @@
                     <span class="fs-5 fw-bold" style="justify-content: end; margin-right: 53px;">Quantity:</span>
                     <div style="flex-direction: row; justify-content: end; display: flex;">
                       <input type="button" value="-" class="mx-1 border button-minus rounded-circle icon-shape icon-sm " data-field="qtyproduk">
-                      <input type="number" name="qtyproduk" class="w-10 text-center border-2 border-rounded quantity-field" readonly>
+                      <input type="number" value="1" name="qtyproduk" class="w-10 text-center border-2 border-rounded quantity-field" readonly required>
                       <input type="button" value="+" class="mx-1 border button-plus rounded-circle icon-shape icon-sm" data-field="qtyproduk">
                     </div>
                   </div>
@@ -51,7 +51,7 @@
       <div class="col-md-6">
         {% for row in data %}
           <div class="imgform">
-            <img src="static/img/{{row[2]}}" alt="imgproduct">
+            <a data-fancybox="gallery" href="static/img/{{row[2]}}"><img src="static/img/{{row[2]}}" width="100%"></a>
           </div>
         {% endfor %}
       </div>
@@ -112,6 +112,8 @@
       // Event listeners for plus and minus buttons
       $('.input-group').on('click', '.button-plus', incrementValue);
       $('.input-group').on('click', '.button-minus', decrementValue);
+
+      TotalCalculate();
     });
   </script>
 {% endfor %}

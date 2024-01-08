@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- My Order -->
+<section id="price">
+    <h1>My Order</h1>
+    <div class="table-margin">
+        {% if datamyorder|length == 0 %}
+        <b>No Entry Has Been Added</b> <br />
+        {% else %}
+        {% for row in datamyorder %}
+
+        <table class="table-order" style="background-color: white;">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">ID Order: {{row[0]}}</th>
+                    <th></th>
+                    <th style="text-align: right;">{{row[5]}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td  class="fw-bold"  style="text-align: left;">x{{row[3]}}  {{row[10]}}</td> <!--NamaProduk-->
+                    <td></td>
+                    <td class="fw-bold" style="text-align: right;">Rp{{row[4]|currency_format}}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-top: 0px;">Kategori: {{row[8]}}</td> <!--KategoriProduk-->
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold"  style="text-align: right;">Rp{{row[12]|currency_format}}</td> <!--HargaProduk-->
+                </tr>
+            <tbody>
+        </table>
+        <br><br>
+        {% endfor %}
+        {% endif %}
+    </div>
+</section>
+
+<!-- Plugin JS -->
+<script src="path/to/smooth-scroll.polyfills.min.js"></script>
+<script>
+    var scroll = new SmoothScroll('a[href*="#"]', {
+        speed: 300,
+        offset: 50
+    });
+</script>
+
+{% endblock %}
+
+<!-- FancyBox JS -->

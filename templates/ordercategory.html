@@ -7,11 +7,11 @@
     <h2>
       Data Order
     </h2>
-    <form action="/order" method="POST">
+    <form action="/filter" method="POST">
       <div class="mb-2" style="display: flex!important; flex-direction: row-reverse;">
         <button type="submit" style="display: flex; flex-wrap: wrap; flex-direction: row-reverse;" class="button-1">Filter Data</button>
         <div class="me-3 form-group categoryselected" style="display: none">
-            <select name="filterCategory" class="form-control" style="width: 100%;" >
+            <select name="filterCategory" class="form-control" style="width: 100%;" required>
               <option disabled="disabled" selected="true" value="">--- Select Category ---</option>
               <option value="Pacifier">Pacifiers</option>
               <option value="BabyRides">Baby Rides</option>
@@ -19,11 +19,11 @@
             </select>
         </div>
         <div class="me-3 form-group dateselected" style="display: none; align-items: baseline;">
-          <input class="date me-2 form-control" name="dateAwal" type="date" placeholder="yyyy-mm-dd">
+          <input class="me-2 form-control" name="dateAwal" type="date" required>
           &mdash;
-          <input class="date ms-2 form-control" name="dateAkhir" type="date" placeholder="yyyy-mm-dd">
+          <input class="ms-2 form-control" name="dateAkhir" type="date" required>
         </div>
-        <select name="filter" class="me-4 form-control filterselect" style="width: 12%!important;" onchange="filterSelected()" required>
+        <select name="filter" class="me-4 form-control filterselect" style="width: 12%!important;" onchange="filterSelected()" required value="">
           <option disabled="disabled" selected="true">--- Select Filter ---</option>
           <option value="Category">Category</option>
           <option value="Date">Date</option>
@@ -69,7 +69,7 @@
           {% endif %}
         </tbody>
       </table>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br>
     </div>
   </div>
 </section>
@@ -88,10 +88,6 @@
       dateFilterDiv.style.display = 'flex';
     }
   }
-
-  $(".date").datepicker({
-        format: "yyyy-mm-dd",
-      });
 </script>
 
 

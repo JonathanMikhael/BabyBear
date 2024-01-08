@@ -146,26 +146,23 @@ def halamanedit():
 
 @app.route('/product/<int:idProduct>')
 def product(idProduct):
-    if session['role'] != "user":
-        return redirect('/')
-    else:
         session['idProduct'] = idProduct
         return redirect('/productpage')
 
 @app.route('/productpage', methods = ['GET', 'POST'])
 def productpage():
-    if session['role'] != "user":
-        return redirect('/login')
-    else:
-        idProduct = session['idProduct']
-        data = db.read(idProduct)
-        if request.method == 'POST':
+    idProduct = session['idProduct']
+    data = db.read(idProduct)
+    if request.method == 'POST':
+        if session.get('role') != "user" and session.get('role') == None:
+            return redirect('/login')
+        else:
             if db.buy(idProduct, request.form):
                 session.pop('idProduct', None)
                 return redirect('/')
             else:
                 return redirect('/')
-        return render_template('halamanproduk.html', data=data)
+    return render_template('halamanproduk.html', data=data)
 
 @app.route('/hapus/<int:idProduct>')
 def hapus(idProduct):
@@ -186,14 +183,28 @@ def dataproduk():
 
         return render_template('dataproduk.html', dpactive = True, data=data)
 
-@app.route('/order')
+@app.route('/order', methods=['GET', 'POST'])
 def dataorder():
     if session['role'] != "admin":
         return redirect('/')
     else:
         data = db.readOrder(None)
 
-        return render_template('order.html', dpactive = True, data=data)
+        if request.method == 'POST':
+            filterType = request.form['filter']
+            categoryType = request.form['filterCategory']
+            dateAwal = request.form['dateAwal']
+            dateAkhir = request.form['dateAkhir']
+
+            if filterType == 'Category':
+                data = db.readCategory(categoryType)
+                return render_template('order.html', orderactive = True, data=data)
+                
+            if filterType == 'Date':
+                data = db.readDate(dateAwal, dateAkhir)
+                return render_template('order.html', orderactive = True, data=data)
+
+    return render_template('order.html', orderactive = True, data=data)
 
 @app.route('/products')
 def about():
@@ -257,6 +268,36 @@ def update_delivery_status():
             return redirect('/order')
         else:
             return redirect('/order')
+
+@app.route('/myorder')
+def myorder():
+    if 'username' in session:
+        username = session['username']
+        datamyorder = db.readMyOrder(username)
+
+        return render_template('myorder.html', orderactive = True, datamyorder=datamyorder)
+    else:
+        return render_template('login.html',)
+
+@app.route('/filter', methods=['GET', 'POST'])
+def filterOrder():
+    if session['role'] != "admin":
+        return redirect('/')
+    else:
+        filterType = request.form['filter']
+        categoryType = request.form['filterCategory']
+        dateAwal = request.form['dateAwal']
+        dateAkhir = request.form['dateAkhir']
+
+        if request.method == 'POST':
+            if filterType == 'Category':
+                data = db.readCategory(categoryType)
+                return render_template('order.html', orderactive = True, data=data)
+            else:
+                data = db.readDate(dateAwal, dateAkhir)
+                return render_template('order.html', orderactive = True, data=data)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)

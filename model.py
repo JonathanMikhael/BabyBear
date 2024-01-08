@@ -227,3 +227,43 @@ class Database:
             return False
         finally:
             con.close()
+
+    def readMyOrder(self, username):
+        con = Database.connect(self)
+        cursor = con.cursor()
+        try:
+            if username == None:
+                cursor.execute('SELECT * FROM orderdata JOIN products ON orderdata.idProduct = products.idProduct')
+            else:
+                cursor.execute('SELECT * FROM orderdata JOIN products ON orderdata.idProduct = products.idProduct WHERE orderdata.username = %s', (username,))
+            return cursor.fetchall()
+        except:
+            return ()
+        finally:
+            con.close()
+
+    def readCategory(self, categoryType):
+        con = Database.connect(self)
+        cursor = con.cursor()
+        try:
+            cursor.execute('SELECT OrderData.*, products.kategori FROM orderdata JOIN Products ON orderdata.idProduct = products.idProduct WHERE products.kategori = %s', (categoryType,))
+            return cursor.fetchall()
+        except Exception as e:
+            print("Error: ", e)
+            con.rollback()
+            return False
+        finally:
+            con.close()
+
+    def readDate(self, dateAwal, dateAkhir):
+        con = Database.connect(self)
+        cursor = con.cursor()
+        try:
+            cursor.execute('SELECT * FROM orderdata WHERE CREATED_AT BETWEEN %s AND %s', (dateAwal, dateAkhir,))
+            return cursor.fetchall()
+        except Exception as e:
+            print("Error: ", e)
+            con.rollback()
+            return False
+        finally:
+            con.close()
